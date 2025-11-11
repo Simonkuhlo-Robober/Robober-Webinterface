@@ -14,7 +14,7 @@ class WebInterfacePlugin(Plugin):
                          environment = environment,
                          name = "Webinterface",
                          description = "Webinterface",
-                         version = 0,
+                         version = 1,
                          used_host_version = 0,
                          plugin_connections=[PluginRequest("HOST", 0, True)]
                          )
