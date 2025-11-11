@@ -1,0 +1,73 @@
+body {
+    background-color: #c1c1c1;
+}
+
+.header-main {
+  display: flex;
+    flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+    height: 100px;
+    gap: 5px;
+}
+
+.header-main a, a:visited, a:link {
+    text-decoration: none; /* removes underline */
+  color: black;
+  height: 100%;
+  object-fit: contain; /* Keeps aspect ratio, fits image inside parent */
+}
+
+.navbar {
+    gap: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.button {
+    min-height: 30px;
+    min-width: 70px;
+    padding-right: 10px;
+    padding-left: 10px;
+    border: 2px solid #4d4d4d;
+    border-bottom: none;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    text-align: center;
+    font-style: italic;
+    align-content: center;
+    background: #999999;
+}
+
+button {
+    background-color: #999999;
+    border: 3px outset grey;
+}
+button:active{
+    background-color: #8c8c8c;
+    border-style: inset;
+}
+
+.header {
+    top: 10px;
+    background-color: #9ebfbf;
+    margin-bottom: 30px;
+    position: sticky;
+}
+
+.header img {
+  height: 100%;
+}
+
+.header h1 {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+}
+
+.header select {
+  height: 50px;
+    background-color: #999999;
+    border: 3px inset grey;
+}
