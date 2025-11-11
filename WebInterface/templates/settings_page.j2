@@ -1,0 +1,8 @@
+{% extends "base.j2" %}
+
+{% block main %}
+    Settings <br>
+    {% for setting in settings %}
+        <br> {{ setting.get_path() }} : {{ setting.current_value }}
+    {% endfor %}
+{% endblock %}

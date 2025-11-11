@@ -1,0 +1,14 @@
+{% extends "base.j2" %}
+
+{% block main %}
+    <h2>Plugins</h2>
+    <div class="box-v">
+        {% for plugin in plugins %}
+            {% include "plugins/plugin_visualizer.j2"%}
+        {% endfor %}
+        <div class="box-h">
+            <div class="spacer-flex-h"></div>
+            <button>Add a Plugin</button>
+        </div>
+    </div>
+{% endblock %}

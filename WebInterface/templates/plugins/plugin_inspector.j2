@@ -1,0 +1,46 @@
+{% extends "base.j2" %}
+
+{% block main %}
+    <link rel="stylesheet" href="/static/sty/plugin_details.css" />
+    <div class="box-h flex-center-v">
+<div class="center-v">
+        {% set start_button_message = "Start / Stop" %}
+        {% if plugin.status == Status.STARTED %}
+            🟢
+            {% set start_button_message = "⏹ Stop" %}
+        {% elif plugin.status == Status.STOPPED  %}
+            🔴
+            {% set start_button_message = "▶ Start" %}
+        {% elif plugin.status == Status.ERROR  %}
+            ⚠️
+            {% set start_button_message = "Restart" %}
+        {% else %}
+            ⚪
+            {% set start_button_message = "▶ Start" %}
+        {% endif %}
+    </div>
+    <h2>{{ plugin.name }}</h2>
+    <div class="spacer-flex-h"></div>
+    <button>{{ start_button_message }}</button>
+    <button><b> ... </b></button>
+    </div>
+    <p>{{ plugin.description }}</p>
+    <div class="box-h navbar">
+        <div class="spacer-flex-h"></div>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_view")>View</button>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_integrations")>Integrations</button>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_settings")>Settings</button>
+        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_logs")>Logs</button>
+    </div>
+    <div id="plugin-details-main">
+        <p><i>Plugin has no view.</i></p>
+    </div>
+    <script>
+    function update_inner(fetch_url) {
+        fetch(fetch_url)
+        .then(response => response.text())
+        .then(data => { document.getElementById("plugin-details-main").innerHTML = data });
+    }
+    update_inner("/plugins/{{ plugin.plugin_id }}/plugin_view")
+   </script>
+{% endblock %}
