@@ -17,4 +17,4 @@ class SettingsWebinterfaceExtension(WebinterfaceExtension):
         @self.router.get("/", response_class=HTMLResponse)
         async def settings_main(request: Request):
             settings = self.parent_plugin.environment.settings.get_settings()
-            return self.templates.TemplateResponse("settings_page.j2", {"request": request, "settings": settings})
+            return self.templates.TemplateResponse("settings/settings_page.j2", {"request": request, "settings": settings})

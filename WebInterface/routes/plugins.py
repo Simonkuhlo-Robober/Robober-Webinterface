@@ -7,6 +7,8 @@ from SimonsPluginResources.plugin import Plugin
 from SimonsPluginResources.plugin_request import PluginRequest
 from SimonsPluginResources.plugin_status import Status
 from SimonsPluginResources.webinterface_extension import WebinterfaceExtension
+from SimonsPluginResources.settings.scopes import PluginScope
+from SimonsPluginResources.settings.setting_filter import SettingScopeFilter
 
 
 class PluginWebinterfaceExtension(WebinterfaceExtension):
@@ -40,7 +42,8 @@ class PluginWebinterfaceExtension(WebinterfaceExtension):
         @self.router.get("/{plugin_id}/plugin_settings", response_class=HTMLResponse)
         async def plugin_settings(request: Request, plugin_id: str):
             plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
-            return self.templates.TemplateResponse("plugins/plugin_settings.j2", {"request": request, "plugin": plugin})
+            settings = self.parent_plugin.environment.settings.get_settings(SettingScopeFilter(PluginScope(plugin.plugin_id)))
+            return self.templates.TemplateResponse("plugins/plugin_settings.j2", {"request": request, "plugin": plugin, "settings": settings})
 
         @self.router.get("/{plugin_id}/plugin_integrations", response_class=HTMLResponse)
         async def plugin_integrations(request: Request, plugin_id: str):

@@ -1,5 +1,7 @@
-<link rel="stylesheet" href="/static/sty/settings.css" />
-<div class="settings-editor">
+{% extends "base.j2" %}
+
+{% block main %}
+    <div class="settings-editor">
     {% include "settings/settings_filter.j2" %}
     <div class="settings-list">
         {% for setting in settings %}
@@ -7,6 +9,5 @@
         {% endfor %}
     </div>
     <div class="box-h"><div class="spacer-flex-h"></div><button>Reset</button><button>Apply</button></div>
-</div>
-
-
+    </div>
+{% endblock %}
