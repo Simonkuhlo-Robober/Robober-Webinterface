@@ -8,6 +8,7 @@ from SimonsPluginResources.webinterface_extension import WebinterfaceExtension
 from starlette.templating import Jinja2Templates
 from .routes.plugins import PluginWebinterfaceExtension
 from .routes.settings import SettingsWebinterfaceExtension
+from .routes.api import APIWebinterfaceExtension
 import uvicorn
 import os
 from typing import TYPE_CHECKING
@@ -27,6 +28,7 @@ class WebInterfacePluginExtension(PluginExtension):
         self.templates = Jinja2Templates(directory=os.path.join(base_dir, "templates"))
         self.add_extension(PluginWebinterfaceExtension(self.parent_plugin, self.templates))
         self.add_extension(SettingsWebinterfaceExtension(self.parent_plugin, self.templates))
+        self.add_extension(APIWebinterfaceExtension(self.parent_plugin))
 
 
         @self.app.get("/")

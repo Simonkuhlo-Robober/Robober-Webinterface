@@ -1,31 +1,32 @@
-import os
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from fastapi.requests import Request
-from jinja2 import TemplateNotFound
-from starlette.templating import Jinja2Templates
 from SimonsPluginResources.plugin import Plugin
-from SimonsPluginResources.plugin_request import PluginRequest
-from SimonsPluginResources.plugin_status import Status
-from SimonsPluginResources.settings.setting_filter import SettingFilterCollection, SettingCategoryFilter, SettingScopeFilter
+from SimonsPluginResources.settings import Setting
+from SimonsPluginResources.settings.filters import SettingFilterCollection
+from SimonsPluginResources.settings.models.setting_update import SettingUpdate
 from SimonsPluginResources.webinterface_extension import WebinterfaceExtension
-from SimonsPluginResources.settings.scopes import PluginScope
+from SimonsPluginResources.settings.models.scope import ScopePlugin
 from typing import Optional
 
 
 class APIWebinterfaceExtension(WebinterfaceExtension):
-    def __init__(self, parent_plugin: Plugin, templates: Jinja2Templates):
-        super().__init__(parent_plugin, "api", templates)
+    def __init__(self, parent_plugin: Plugin):
+        super().__init__(parent_plugin, "api")
 
     def setup_router(self) -> None:
-        @self.router.get("/filtered_list/", response_class=HTMLResponse)
-        async def settings_api(request: Request, plugin_id: Optional[str] = None, category: Optional[str] = None):
-            filter_collection = SettingFilterCollection()
-            if plugin_id:
-                filter_collection.add_filter(SettingScopeFilter(PluginScope(plugin_id)))
-            if category:
-                filter_collection.add_filter(SettingCategoryFilter(category))
-            settings = self.parent_plugin.environment.settings.get_settings(filter_collection)
-            setting_names: list[str] = []
-            for setting in settings:
-                setting_names.append(f"{setting.topic}.{setting.setting_id}")
-            return JSONResponse({"settings": setting_names})
+        @self.router.get("/setting/{setting_path}")
+        async def get_setting(request: Request, setting_path: str):
+            return self.parent_plugin.environment.settings.get_setting(setting_path)
+
+        @self.router.put("/setting/{setting_path}")
+        async def update_setting(request: Request, setting_path: str, update: SettingUpdate):
+            self.parent_plugin.environment.settings.set_current_value(setting_path, update.current_value)
+            return self.parent_plugin.environment.settings.get_setting(setting_path)
+
+        @self.router.post("/setting/{setting_path}")
+        async def create_setting(request: Request, setting_path: str):
+            raise NotImplementedError
+
+        @self.router.delete("/setting/{setting_path}")
+        async def delete_setting(request: Request, setting_path: str, update: SettingUpdate):
+            raise NotImplementedError
