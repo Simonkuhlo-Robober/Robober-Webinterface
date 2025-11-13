@@ -1,25 +1,7 @@
 {% extends "base.j2" %}
 
 {% block main %}
-    <script type="text/javascript" src="/static/scr/settings/settings_editor.js"></script>
 
-    <div class="settings-editor">
-    {% include "settings/settings_filter.j2" %}
-    <div class="settings-list">
-        {% for setting in settings %}
-            <div class="single-setting-editor" data-setting_path="{{ setting.path }}">
-                <p> {{ setting.path }} </p>
-                <label>
-                    <input id="value-input-{{ setting.path }}" type="text" value="{{ setting.value }}" data-original="{{ setting.value }}">
-                </label>
-                <div class="box-h setting-editor-elements" id="editor-elements-{{ setting.path }}" style="display:none;">
-                    <button class="button-reset">Cancel</button>
-                    <button class="button-save">Save</button>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="box-h"><div class="spacer-flex-h"></div>
-        <button>Reset</button></div>
-    </div>
+    {% include "settings/settings_editor.j2" %}
+
 {% endblock %}

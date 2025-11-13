@@ -3,7 +3,7 @@
 {% block main %}
     <link rel="stylesheet" href="/static/sty/plugin_details.css" />
     <div class="box-h flex-center-v">
-<div class="center-v">
+    <div class="center-v">
         {% set start_button_message = "Start / Stop" %}
         {% if plugin.status == Status.STARTED %}
             🟢
@@ -29,7 +29,7 @@
         <div class="spacer-flex-h"></div>
         <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_view")>View</button>
         <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_integrations")>Integrations</button>
-        <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_settings")>Settings</button>
+        <button class="button" onclick=update_inner("/settings/?plugin={{ plugin.plugin_id }}&clean=True")>Settings</button>
         <button class="button" onclick=update_inner("/plugins/{{ plugin.plugin_id }}/plugin_logs")>Logs</button>
     </div>
     <div id="plugin-details-main">
