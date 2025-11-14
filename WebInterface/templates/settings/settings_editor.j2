@@ -1,7 +1,10 @@
 <script type="text/javascript" src="/static/scr/settings/settings_editor.js"></script>
+<link rel="stylesheet" href="/static/sty/settings.css" />
 
     <div class="settings-editor">
-    {% include "settings/settings_filter.j2" %}
+    {% if navbar == True %}
+        {% include "settings/settings_filter.j2" %}
+    {% endif %}
     <div class="settings-list">
         {% for setting in settings %}
             <div class="single-setting-editor" data-setting_path="{{ setting.path }}">

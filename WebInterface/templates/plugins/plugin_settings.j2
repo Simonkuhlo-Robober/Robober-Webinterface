@@ -1,12 +1,9 @@
-<link rel="stylesheet" href="/static/sty/settings.css" />
-<div class="settings-editor">
-    {% include "settings/settings_filter.j2" %}
-    <div class="settings-list">
-        {% for setting in settings %}
-            {% include "settings/setting_edit_element.j2" %}
-        {% endfor %}
-    </div>
-    <div class="box-h"><div class="spacer-flex-h"></div><button>Reset</button><button>Apply</button></div>
-</div>
+{% extends "plugins/plugin_inspector.j2" %}
 
+{% block inner_content %}
 
+    {% with navbar=False %}
+        {% include "settings/settings_editor.j2" %}
+    {% endwith %}
+
+{% endblock %}

@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
     const settingEditors = document.querySelectorAll(".single-setting-editor");
-
     settingEditors.forEach(editor => {
         const settingPath = editor.dataset.setting_path;
 
