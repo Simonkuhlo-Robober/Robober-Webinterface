@@ -24,8 +24,8 @@ class WebInterfacePlugin(Plugin):
 
     def get_settings(self) -> list[Setting]:
         return [
-            Setting(rel_path="host_address", default_value="localhost", scope=ScopePlugin(plugin_id=self.plugin_id)),
-            Setting(rel_path="port", default_value="8080", scope=ScopePlugin(plugin_id=self.plugin_id))
+            Setting(rel_path="host_address", default_value="localhost", scope=ScopePlugin(plugin_id=self.plugin_id), comment="Webinterface must be restarted after changing value!"),
+            Setting(rel_path="port", default_value="8080", scope=ScopePlugin(plugin_id=self.plugin_id), comment="Webinterface must be restarted after changing value!")
         ]
 
     def add_plugin_link(self, plugin:"Plugin") -> None:

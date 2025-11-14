@@ -13,6 +13,9 @@
                     <input id="value-input-{{ setting.path }}" type="text" value="{{ setting.value }}" data-original="{{ setting.value }}">
                 </label>
                 <div class="box-h setting-editor-elements" id="editor-elements-{{ setting.path }}" style="display:none;">
+                    {% if setting.comment %}
+                        <span title="{{ setting.comment }}">ℹ️</span>
+                    {% endif %}
                     <button class="button-reset">Cancel</button>
                     <button class="button-save">Save</button>
                 </div>
