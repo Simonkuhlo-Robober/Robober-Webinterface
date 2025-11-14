@@ -8,6 +8,7 @@ from SimonsPluginResources.webinterface_extension import WebinterfaceExtension
 from starlette.templating import Jinja2Templates
 from .routes.plugins import PluginWebinterfaceExtension
 from .routes.settings import SettingsWebinterfaceExtension
+from .routes.api import APIWebinterfaceExtension
 import uvicorn
 import os
 from typing import TYPE_CHECKING
@@ -27,6 +28,7 @@ class WebInterfacePluginExtension(PluginExtension):
         self.templates = Jinja2Templates(directory=os.path.join(base_dir, "templates"))
         self.add_extension(PluginWebinterfaceExtension(self.parent_plugin, self.templates))
         self.add_extension(SettingsWebinterfaceExtension(self.parent_plugin, self.templates))
+        self.add_extension(APIWebinterfaceExtension(self.parent_plugin))
 
 
         @self.app.get("/")
@@ -46,9 +48,23 @@ class WebInterfacePluginExtension(PluginExtension):
     def add_extension(self, extension:WebinterfaceExtension) -> None:
         self.app.include_router(extension.router)
 
-    # Function to run the FastAPI server in a separate thread
     def run_webinterface(self):
-        uvicorn.run(self.app, host="localhost", port=8000)
+        fallback_host: str = "localhost"
+        fallback_port: int = 8000
+        host = self.parent_plugin.environment.settings.get_value("Plugin.WEBINTERFACE.host_address")
+        if not host:
+            host = fallback_host
+            self.parent_plugin.log_factory.log(f"Setting host_address not found. Using fallback ({fallback_host})")
+        port = self.parent_plugin.environment.settings.get_value("Plugin.WEBINTERFACE.port")
+        try:
+            port = int(port)
+        except ValueError:
+            port = fallback_port
+            self.parent_plugin.log_factory.log(f"Unable to convert port setting value to int. Using fallback ({fallback_port})")
+        if not port:
+            port = fallback_port
+            self.parent_plugin.log_factory.log(f"Setting port not found. Using fallback ({fallback_port})")
+        uvicorn.run(self.app, host=host, port=port)
 
     def _start(self) -> None:
         api_thread = Thread(target=self.run_webinterface, daemon=True)

@@ -1,11 +1,12 @@
 from SimonsPluginResources.environment import Environment
 from SimonsPluginResources.plugin import Plugin
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from SimonsPluginResources.plugin_host import HostPlugin
 from SimonsPluginResources.plugin_request import PluginRequest
-from SimonsPluginResources.settings.scopes import PluginScope
-from SimonsPluginResources.settings.setting import Setting
+from SimonsPluginResources.settings.models.scope import ScopePlugin
+from SimonsPluginResources.settings import Setting
 from .main import WebInterfacePluginExtension
 
 class WebInterfacePlugin(Plugin):
@@ -23,12 +24,8 @@ class WebInterfacePlugin(Plugin):
 
     def get_settings(self) -> list[Setting]:
         return [
-            Setting("webinterface",
-                    "host_address",
-                    "Networking",
-                    scope=PluginScope(self.plugin_id),
-                    default_value="localhost",
-                    )
+            Setting(rel_path="host_address", default_value="localhost", scope=ScopePlugin(plugin_id=self.plugin_id)),
+            Setting(rel_path="port", default_value="8080", scope=ScopePlugin(plugin_id=self.plugin_id))
         ]
 
     def add_plugin_link(self, plugin:"Plugin") -> None:

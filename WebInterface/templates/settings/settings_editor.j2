@@ -1,0 +1,24 @@
+<script type="text/javascript" src="/static/scr/settings/settings_editor.js"></script>
+<link rel="stylesheet" href="/static/sty/settings.css" />
+
+    <div class="settings-editor">
+    {% if navbar == True %}
+        {% include "settings/settings_filter.j2" %}
+    {% endif %}
+    <div class="settings-list">
+        {% for setting in settings %}
+            <div class="single-setting-editor" data-setting_path="{{ setting.path }}">
+                <p> {{ setting.rel_path }} </p>
+                <label>
+                    <input id="value-input-{{ setting.path }}" type="text" value="{{ setting.value }}" data-original="{{ setting.value }}">
+                </label>
+                <div class="box-h setting-editor-elements" id="editor-elements-{{ setting.path }}" style="display:none;">
+                    <button class="button-reset">Cancel</button>
+                    <button class="button-save">Save</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="box-h"><div class="spacer-flex-h"></div>
+        <button>Reset</button></div>
+    </div>

@@ -6,9 +6,9 @@ from starlette.templating import Jinja2Templates
 from SimonsPluginResources.plugin import Plugin
 from SimonsPluginResources.plugin_request import PluginRequest
 from SimonsPluginResources.plugin_status import Status
+from SimonsPluginResources.settings.filters.scope_filter import SettingFilterScope
 from SimonsPluginResources.webinterface_extension import WebinterfaceExtension
-from SimonsPluginResources.settings.scopes import PluginScope
-from SimonsPluginResources.settings.setting_filter import SettingScopeFilter
+from SimonsPluginResources.settings.models.scope import ScopePlugin
 
 
 class PluginWebinterfaceExtension(WebinterfaceExtension):
@@ -35,22 +35,22 @@ class PluginWebinterfaceExtension(WebinterfaceExtension):
             target_file_path = f"{rel_path}/External/WebInterface"
             temp_templates = Jinja2Templates(target_file_path)
             try:
-                return temp_templates.TemplateResponse("view.j2", {"request": request, "plugin": plugin})
+                return temp_templates.TemplateResponse("view.j2", {"request": request, "plugin": plugin, "Status": Status})
             except TemplateNotFound:
-                return self.templates.TemplateResponse("plugins/view_not_found.j2", {"request": request, "plugin": plugin})
+                return self.templates.TemplateResponse("plugins/view_not_found.j2", {"request": request, "plugin": plugin, "Status": Status})
 
         @self.router.get("/{plugin_id}/plugin_settings", response_class=HTMLResponse)
         async def plugin_settings(request: Request, plugin_id: str):
             plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
-            settings = self.parent_plugin.environment.settings.get_settings(SettingScopeFilter(PluginScope(plugin.plugin_id)))
-            return self.templates.TemplateResponse("plugins/plugin_settings.j2", {"request": request, "plugin": plugin, "settings": settings})
+            settings = self.parent_plugin.environment.settings.get_list(SettingFilterScope(ScopePlugin(plugin_id=plugin.plugin_id)))
+            return self.templates.TemplateResponse("plugins/plugin_settings.j2", {"request": request, "plugin": plugin, "settings": settings, "Status": Status})
 
         @self.router.get("/{plugin_id}/plugin_integrations", response_class=HTMLResponse)
         async def plugin_integrations(request: Request, plugin_id: str):
             plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
-            return self.templates.TemplateResponse("plugins/plugin_integrations.j2", {"request": request, "plugin": plugin})
+            return self.templates.TemplateResponse("plugins/plugin_integrations.j2", {"request": request, "plugin": plugin, "Status": Status})
 
         @self.router.get("/{plugin_id}/plugin_logs", response_class=HTMLResponse)
         async def plugin_logs(request: Request, plugin_id: str):
             plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
-            return self.templates.TemplateResponse("plugins/plugin_logs.j2", {"request": request, "plugin": plugin})
+            return self.templates.TemplateResponse("plugins/plugin_logs.j2", {"request": request, "plugin": plugin, "Status": Status})
