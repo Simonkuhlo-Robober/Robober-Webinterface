@@ -52,6 +52,7 @@
 
 .setting-editor-elements {
     gap: 3px;
+    padding-left: 3px;
 }
 
 .single-setting-editor p{
@@ -59,8 +60,8 @@
     width: 100%;
 }
 .single-setting-editor span{
-    display: inline-block;
-    vertical-align: center;
+    display: flex;
+    align-items: center;
 }
 
 .single-setting-editor label{
