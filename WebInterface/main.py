@@ -16,13 +16,12 @@ if TYPE_CHECKING:
     from .plugin import WebInterfacePlugin
 
 
-class WebInterfacePluginExtension(PluginExtension):
+class WebInterface:
     def __init__(self, parent_plugin: "WebInterfacePlugin" = None):
-        super().__init__(parent_plugin)
         # Get the directory where the current file is located
         base_dir = os.path.dirname(os.path.abspath(__file__))
         static_dir_path = os.path.join(base_dir, "static")
-
+        self.parent_plugin = parent_plugin
         self.app = FastAPI()
         self.app.mount("/static", StaticFiles(directory=static_dir_path), name="static")
         self.templates = Jinja2Templates(directory=os.path.join(base_dir, "templates"))
@@ -41,30 +40,32 @@ class WebInterfacePluginExtension(PluginExtension):
 
         @self.app.get("/status", response_class=HTMLResponse)
         async def settings_interface(request: Request):
-            latency = self.parent_plugin.environment.bot.latency
-            return self.templates.TemplateResponse("status_page.j2", {"request": request, "latency": latency})
+            task_manager = self.parent_plugin.environment.task_manager
+            return self.templates.TemplateResponse("status_page.j2", {"request": request, "task_manager": task_manager})
 
 
     def add_extension(self, extension:WebinterfaceExtension) -> None:
         self.app.include_router(extension.router)
 
-    def run_webinterface(self):
+    async def run_webinterface(self):
         fallback_host: str = "localhost"
         fallback_port: int = 8000
-        host = self.parent_plugin.environment.settings.get_value("Plugin.WEBINTERFACE.host_address")
+        host = self.parent_plugin.environment.settings.get_value("Plugin.webinterface.host_address")
         if not host:
             host = fallback_host
-            self.parent_plugin.log_factory.log(f"Setting host_address not found. Using fallback ({fallback_host})")
-        port = self.parent_plugin.environment.settings.get_value("Plugin.WEBINTERFACE.port")
+            self.parent_plugin.logging.log(f"Setting host_address not found. Using fallback ({fallback_host})")
+        port = self.parent_plugin.environment.settings.get_value("Plugin.webinterface.port")
         try:
             port = int(port)
         except ValueError:
             port = fallback_port
-            self.parent_plugin.log_factory.log(f"Unable to convert port setting value to int. Using fallback ({fallback_port})")
+            self.parent_plugin.logging.log(f"Unable to convert port setting value to int. Using fallback ({fallback_port})")
         if not port:
             port = fallback_port
-            self.parent_plugin.log_factory.log(f"Setting port not found. Using fallback ({fallback_port})")
-        uvicorn.run(self.app, host=host, port=port)
+            self.parent_plugin.logging.log(f"Setting port not found. Using fallback ({fallback_port})")
+        config = uvicorn.Config(self.app, host=host, port=port)
+        server = uvicorn.Server(config)
+        await server.serve()
 
     def _start(self) -> None:
         api_thread = Thread(target=self.run_webinterface, daemon=True)

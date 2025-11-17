@@ -18,18 +18,18 @@ class PluginWebinterfaceExtension(WebinterfaceExtension):
     def setup_router(self) -> None:
         @self.router.get("/", response_class=HTMLResponse)
         async def plugin_interface(request: Request):
-            plugins = self.parent_plugin.host_plugin.get_loaded_plugins()
+            plugins = self.parent_plugin.host.get_loaded_plugins()
             return self.templates.TemplateResponse("/plugins/plugin_list.j2", {"request": request, "plugins": plugins, "Status": Status})
 
         @self.router.get("/{plugin_id}", response_class=HTMLResponse)
         async def plugin_details(request: Request, plugin_id: str):
-            plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+            plugin = self.parent_plugin.host.get_loaded_plugin(PluginRequest(plugin_id))
             return self.templates.TemplateResponse("plugins/plugin_inspector.j2",
                                               {"request": request, "plugin": plugin, "Status": Status})
 
         @self.router.get("/{plugin_id}/plugin_view", response_class=HTMLResponse)
         async def plugin_view(request: Request, plugin_id: str):
-            plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+            plugin = self.parent_plugin.host.get_loaded_plugin(PluginRequest(plugin_id))
             module_path = plugin.get_module_path()
             rel_path = os.path.abspath(module_path)
             target_file_path = f"{rel_path}/External/WebInterface"
@@ -41,16 +41,16 @@ class PluginWebinterfaceExtension(WebinterfaceExtension):
 
         @self.router.get("/{plugin_id}/plugin_settings", response_class=HTMLResponse)
         async def plugin_settings(request: Request, plugin_id: str):
-            plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+            plugin = self.parent_plugin.host.get_loaded_plugin(PluginRequest(plugin_id))
             settings = self.parent_plugin.environment.settings.get_list(SettingFilterScope(ScopePlugin(plugin_id=plugin.plugin_id)))
             return self.templates.TemplateResponse("plugins/plugin_settings.j2", {"request": request, "plugin": plugin, "settings": settings, "Status": Status})
 
         @self.router.get("/{plugin_id}/plugin_integrations", response_class=HTMLResponse)
         async def plugin_integrations(request: Request, plugin_id: str):
-            plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+            plugin = self.parent_plugin.host.get_loaded_plugin(PluginRequest(plugin_id))
             return self.templates.TemplateResponse("plugins/plugin_integrations.j2", {"request": request, "plugin": plugin, "Status": Status})
 
         @self.router.get("/{plugin_id}/plugin_logs", response_class=HTMLResponse)
         async def plugin_logs(request: Request, plugin_id: str):
-            plugin = self.parent_plugin.host_plugin.get_loaded_plugin(PluginRequest(plugin_id))
+            plugin = self.parent_plugin.host.get_loaded_plugin(PluginRequest(plugin_id))
             return self.templates.TemplateResponse("plugins/plugin_logs.j2", {"request": request, "plugin": plugin, "Status": Status})

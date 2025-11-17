@@ -1,40 +1,5 @@
 {% extends "base.j2" %}
 
 {% block main %}
-    Status: {{ latency }}
-    <br>
-    <br>
-    <button onclick="start_bot()">
-    Start
-    </button>
-    <button onclick="stop_bot()">
-    Stop
-    </button>
-    <button onclick="restart_bot()">Restart</button>
-    <script>
-    function start_bot() {
-      fetch("/bot/start")
-        .then(response => response.text())
-        .then(data => {
-          console.log(data); // Handle the server response here
-        })
-        .catch(error => console.error(error));
-    }
-    function restart_bot() {
-      fetch("/bot/clear")
-        .then(response => response.text())
-        .then(data => {
-          console.log(data); // Handle the server response here
-        })
-        .catch(error => console.error(error));
-    }
-    function stop_bot() {
-      fetch("/bot/stop")
-        .then(response => response.text())
-        .then(data => {
-          console.log(data); // Handle the server response here
-        })
-        .catch(error => console.error(error));
-    }
-    </script>
+{% include "task_manager/task_manager.j2" %}
 {% endblock %}

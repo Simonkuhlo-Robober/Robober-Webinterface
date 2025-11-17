@@ -1,0 +1,4 @@
+<h1>Task Manager</h1>
+{% for task in task_manager.running_tasks.keys() %}
+    {{ task }} <button>⏹ Stop</button>
+{% endfor %}
