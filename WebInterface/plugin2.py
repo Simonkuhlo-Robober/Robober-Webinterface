@@ -29,4 +29,4 @@ class WebInterfacePlugin(Plugin):
 
     @property
     def tasks(self) -> Optional[list[AsyncTask]]:
-        return[AsyncTask(self.webinterface.run_webinterface(), "Webinterface main loop")]
+        return[AsyncTask(self.webinterface.run_webinterface, name="Webinterface main loop")]
